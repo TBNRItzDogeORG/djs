@@ -44,13 +44,12 @@ class APIRequest {
       headers = Object.assign(headers, body.getHeaders());
       // eslint-disable-next-line eqeqeq
     } else if (this.options.data != null) {
-      body = JSON.stringify(this.options.data);
-      headers['Content-Type'] = 'application/json';
+      body = this.options.data;
     }
 
     return req(url, this.method)
       .header(headers)
-      .body(body)
+      .body(body, body instanceof FormData ? 'fd' : 'json')
       .timeout(this.client.options.restRequestTimeout)
       .send();
   }
