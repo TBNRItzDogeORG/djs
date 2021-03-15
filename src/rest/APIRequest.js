@@ -1,8 +1,12 @@
 'use strict';
 
+const http = require('http');
 const FormData = require('@discordjs/form-data');
-const { UserAgent } = require('../util/Constants');
-const req = require('@helperdiscord/centra');
+const AbortController = require('abort-controller');
+const fetch = require('node-fetch');
+const { browser, UserAgent } = require('../util/Constants');
+
+if (http.Agent) var agent = new http.Agent({ keepAlive: true });
 
 class APIRequest {
   constructor(rest, method, path, options) {
@@ -16,7 +20,7 @@ class APIRequest {
     let queryString = '';
     if (options.query) {
       const query = Object.entries(options.query)
-        .filter(([, value]) => value !== null && typeof value !== 'undefined')
+        .filter(([, value]) => ![null, 'null', 'undefined'].includes(value) && typeof value !== 'undefined')
         .flatMap(([key, value]) => (Array.isArray(value) ? value.map(v => [key, v]) : [[key, value]]));
       queryString = new URLSearchParams(query).toString();
     }
@@ -33,26 +37,30 @@ class APIRequest {
 
     if (this.options.auth !== false) headers.Authorization = this.rest.getAuth();
     if (this.options.reason) headers['X-Audit-Log-Reason'] = encodeURIComponent(this.options.reason);
-    headers['User-Agent'] = UserAgent;
+    if (!browser) headers['User-Agent'] = UserAgent;
     if (this.options.headers) headers = Object.assign(headers, this.options.headers);
 
-    let body = false;
+    let body;
     if (this.options.files && this.options.files.length) {
       body = new FormData();
       for (const file of this.options.files) if (file && file.file) body.append(file.name, file.file, file.name);
       if (typeof this.options.data !== 'undefined') body.append('payload_json', JSON.stringify(this.options.data));
+      if (!browser) headers = Object.assign(headers, body.getHeaders());
       // eslint-disable-next-line eqeqeq
     } else if (this.options.data != null) {
-      body = new FormData();
-      body.append('payload_json', JSON.stringify(this.options.data));
+      body = JSON.stringify(this.options.data);
+      headers['Content-Type'] = 'application/json';
     }
-    let rr = req(url, this.method)
-      .header(headers)
-      .timeout(this.client.options.restRequestTimeout);
-    if (body) {
-      rr.body(body, 'fd')
-    }
-    return rr.send();
+
+    const controller = new AbortController();
+    const timeout = this.client.setTimeout(() => controller.abort(), this.client.options.restRequestTimeout);
+    return fetch(url, {
+      method: this.method,
+      headers,
+      agent,
+      body,
+      signal: controller.signal,
+    }).finally(() => this.client.clearTimeout(timeout));
   }
 }
 
