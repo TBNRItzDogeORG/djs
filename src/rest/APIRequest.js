@@ -36,22 +36,23 @@ class APIRequest {
     headers['User-Agent'] = UserAgent;
     if (this.options.headers) headers = Object.assign(headers, this.options.headers);
 
-    let body;
+    let body = false;
     if (this.options.files && this.options.files.length) {
       body = new FormData();
       for (const file of this.options.files) if (file && file.file) body.append(file.name, file.file, file.name);
       if (typeof this.options.data !== 'undefined') body.append('payload_json', JSON.stringify(this.options.data));
-      headers = Object.assign(headers, body.getHeaders());
       // eslint-disable-next-line eqeqeq
     } else if (this.options.data != null) {
-      body = this.options.data;
+      body = new FormData();
+      body.append('payload_json', JSON.stringify(this.options.data));
     }
-
-    return req(url, this.method)
+    let rr = req(url, this.method)
       .header(headers)
-      .body(body, body instanceof FormData ? 'fd' : 'json')
-      .timeout(this.client.options.restRequestTimeout)
-      .send();
+      .timeout(this.client.options.restRequestTimeout);
+    if (body) {
+      rr.body(body, 'fd')
+    }
+    return rr.send();
   }
 }
 
