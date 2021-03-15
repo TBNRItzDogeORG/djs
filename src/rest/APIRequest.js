@@ -1,12 +1,10 @@
 'use strict';
 
-const http = require('http');
 const FormData = require('@discordjs/form-data');
 const AbortController = require('abort-controller');
 const fetch = require('node-fetch');
 const { browser, UserAgent } = require('../util/Constants');
 
-if (http.Agent) var agent = new http.Agent({ keepAlive: true });
 
 class APIRequest {
   constructor(rest, method, path, options) {
@@ -57,7 +55,6 @@ class APIRequest {
     return fetch(url, {
       method: this.method,
       headers,
-      agent,
       body,
       signal: controller.signal,
     }).finally(() => this.client.clearTimeout(timeout));
