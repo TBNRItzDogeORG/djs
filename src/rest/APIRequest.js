@@ -1,8 +1,9 @@
 'use strict';
 
 const FormData = require('@discordjs/form-data');
+const AbortController = require('abort-controller');
+const fetch = require('node-fetch');
 const { UserAgent } = require('../util/Constants');
-const req = require('@helperdiscord/centra');
 
 class APIRequest {
   constructor(rest, method, path, options) {
@@ -48,11 +49,14 @@ class APIRequest {
       headers['Content-Type'] = 'application/json';
     }
 
-    return req(url, this.method)
-      .header(headers)
-      .body(body)
-      .timeout(this.client.options.restRequestTimeout)
-      .send();
+    const controller = new AbortController();
+    const timeout = this.client.setTimeout(() => controller.abort(), this.client.options.restRequestTimeout);
+    return fetch(url, {
+      method: this.method,
+      headers,
+      body,
+      signal: controller.signal,
+    }).finally(() => this.client.clearTimeout(timeout));
   }
 }
 
