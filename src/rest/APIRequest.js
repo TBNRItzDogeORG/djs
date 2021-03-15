@@ -1,6 +1,6 @@
 'use strict';
 
-const FormData = require('form-data');
+const FormData = require('@discordjs/form-data');
 const { UserAgent } = require('../util/Constants');
 const req = require('@helperdiscord/centra');
 
