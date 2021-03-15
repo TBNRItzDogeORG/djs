@@ -1,4 +1,3 @@
-const { AbortController } = require('abort-controller');
 const FormData = require('@discordjs/form-data');
 const { UserAgent } = require('../util/Constants');
 const centra = require('@helperdiscord/centra');
@@ -59,24 +58,19 @@ module.exports = class APIRequest {
             headers = Object.assign(headers, body.getHeaders());
         } else if (this.options.data != null) body = this.options.data;
 
-        const controller = new AbortController();
-        const timeout = this.client.setTimeout(
-            () => controller.abort(),
-            this.client.options.restRequestTimeout
-        );
-        const request = centra(url, this.method).body(
-            body instanceof FormData ? body.getBuffer() : body,
-            body instanceof FormData ? "buffer" : "json"
-        );
-        for (const [name, value] of Object.entries(headers))
-            request.header(name, value);
+        const request = centra(url, this.method)
+            .body(
+                body instanceof FormData ? body.getBuffer() : body,
+                body instanceof FormData ? "buffer" : "json"
+            )
+            .timeout(this.client.options.restRequestTimeout)
+            .header(headers);
         if (this.options.debug)
             this.client.emit(`warn`,
                 `[Rest] Sending request to ${this.method.toUpperCase()} ${this.path}`
             );
         const start = +new Date();
         return request.send().finally(() => {
-            this.client.clearTimeout(timeout);
             this.client.restPing = +new Date() - start;
             if (this.options.debug)
                 this.client.emit(`warn`,

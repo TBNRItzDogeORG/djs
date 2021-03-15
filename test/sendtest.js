@@ -124,6 +124,7 @@ const tests = [
 client.on('message', async message => {
   if (message.author.id !== owner) return;
   const match = message.content.match(/^do (.+)$/);
+  console.log(match)
   if (match && match[1] === 'it') {
     /* eslint-disable no-await-in-loop */
     for (const [i, test] of tests.entries()) {

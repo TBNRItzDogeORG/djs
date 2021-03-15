@@ -27,5 +27,7 @@ client.on('ready', async () => {
     console.error(error);
   }
 });
-
+client.on('warn', (w) => {
+  console.log(w)
+});
 client.login(token).catch(console.error);

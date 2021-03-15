@@ -8,7 +8,7 @@ const DiscordAPIError = require('./DiscordAPIError');
 const HTTPError = require('./HTTPError');
 const parseResponse = async (res) => {
     if (res.headers["content-type"]?.includes("application/json")) {
-        const json = await res.json();
+        const json = res.json();
         return json;
     }
     return res.body.toString();
