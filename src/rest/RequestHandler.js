@@ -127,7 +127,7 @@ class RequestHandler {
     }
 
     // Handle 2xx and 3xx responses
-    if (res.statusCode === 200) {
+    if (res.statusCode >= 200 && res.statusCode < 300) {
       // Nothing wrong with the request, proceed with the next one
       return parseResponse(res);
     }
