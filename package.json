@@ -49,7 +49,6 @@
   "dependencies": {
     "@discordjs/collection": "^0.1.6",
     "@discordjs/form-data": "^3.0.1",
-    "@helperdiscord/centra": "^2.3.4",
     "abort-controller": "^3.0.0",
     "node-fetch": "^2.6.1",
     "prism-media": "^1.2.2",
