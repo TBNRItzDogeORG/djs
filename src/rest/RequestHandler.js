@@ -9,8 +9,8 @@ const {
 const Util = require('../util/Util');
 
 function parseResponse(res) {
-  if (res.headers.get('content-type').startsWith('application/json')) return res.json();
-  return res.buffer();
+  if (res.headers['content-type'].startsWith('application/json')) return res.json();
+  return res.body;
 }
 
 function getAPIOffset(serverDate) {
@@ -95,12 +95,13 @@ class RequestHandler {
       return this.execute(request);
     }
 
+
     if (res && res.headers) {
-      const serverDate = res.headers.get('date');
-      const limit = res.headers.get('x-ratelimit-limit');
-      const remaining = res.headers.get('x-ratelimit-remaining');
-      const reset = res.headers.get('x-ratelimit-reset');
-      const retryAfter = res.headers.get('retry-after');
+      const serverDate = res.headers['date'];
+      const limit = res.headers['x-ratelimit-limit'];
+      const remaining = res.headers['x-ratelimit-remaining']
+      const reset = res.headers['x-ratelimit-reset'];
+      const retryAfter = res.headers['retry-after'];
 
       this.limit = limit ? Number(limit) : Infinity;
       this.remaining = remaining ? Number(remaining) : 1;
@@ -113,7 +114,7 @@ class RequestHandler {
       }
 
       // Handle global ratelimit
-      if (res.headers.get('x-ratelimit-global')) {
+      if (res.headers['x-ratelimit-global']) {
         // Set the manager's global timeout as the promise for other requests to "wait"
         this.manager.globalTimeout = Util.delayFor(this.retryAfter);
 
@@ -126,15 +127,15 @@ class RequestHandler {
     }
 
     // Handle 2xx and 3xx responses
-    if (res.ok) {
+    if (res.statusCode === 200) {
       // Nothing wrong with the request, proceed with the next one
       return parseResponse(res);
     }
 
     // Handle 4xx responses
-    if (res.status >= 400 && res.status < 500) {
+    if (res.statusCode >= 400 && res.statusCode < 500) {
       // Handle ratelimited requests
-      if (res.status === 429) {
+      if (res.statusCode === 429) {
         // A ratelimit was hit - this should never happen
         this.manager.client.emit('debug', `429 hit on route ${request.route}`);
         await Util.delayFor(this.retryAfter);
@@ -146,17 +147,17 @@ class RequestHandler {
       try {
         data = await parseResponse(res);
       } catch (err) {
-        throw new HTTPError(err.message, err.constructor.name, err.status, request.method, request.path);
+        throw new HTTPError(err.message, err.constructor.name, err.statusCode, request.method, request.path);
       }
 
-      throw new DiscordAPIError(request.path, data, request.method, res.status);
+      throw new DiscordAPIError(request.path, data, request.method, res.statusCode);
     }
 
     // Handle 5xx responses
-    if (res.status >= 500 && res.status < 600) {
+    if (res.statusCode >= 500 && res.statusCode < 600) {
       // Retry the specified number of times for possible serverside issues
       if (request.retries === this.manager.client.options.retryLimit) {
-        throw new HTTPError(res.statusText, res.constructor.name, res.status, request.method, request.path);
+        throw new HTTPError(res.statusText, res.constructor.name, res.statusCode, request.method, request.path);
       }
 
       request.retries++;
