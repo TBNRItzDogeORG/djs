@@ -9,7 +9,7 @@ const {
 const Util = require('../util/Util');
 
 function parseResponse(res) {
-  if (res.headers['content-type'].startsWith('application/json')) return res.json();
+  if (res.headers['content-type']?.startsWith('application/json')) return res.json();
   return res.body;
 }
 
