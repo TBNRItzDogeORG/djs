@@ -3,6 +3,7 @@
 require('setimmediate');
 const EventEmitter = require('events');
 const RESTManager = require('../rest/RESTManager');
+const RM2 = require('../restdos/RESTManager');
 const { DefaultOptions } = require('../util/Constants');
 const Util = require('../util/Util');
 
@@ -47,16 +48,13 @@ class BaseClient extends EventEmitter {
      * @private
      */
     this.rest = new RESTManager(this, options._tokenType);
-
+    this.rm2 = new RM2(this, options._tokenType);
     this.restPing = 0;
   }
 
-  /**
-   * API shortcut
-   * @type {Object}
-   * @readonly
-   * @private
-   */
+  get req() {
+    return this.rm2.api
+  }
   get api() {
     return this.rest.api;
   }
