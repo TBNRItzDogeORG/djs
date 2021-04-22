@@ -28,8 +28,8 @@ class APIRequest {
   make() {
     const API =
       this.options.versioned === false
-        ? this.client.options.http.api
-        : `${this.client.options.http.api}/v${this.client.options.http.version}`;
+        ? this.client.options.httpdos.api
+        : `${this.client.options.httpdos.api}/v${this.client.options.httpdos.version}`;
     const url = API + this.path;
     let headers = {};
 

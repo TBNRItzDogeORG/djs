@@ -32,7 +32,7 @@ class RESTManager {
   }
 
   get cdn() {
-    return Endpoints.CDN(this.client.options.http.cdn);
+    return Endpoints.CDN(this.client.options.httpdos.cdn);
   }
 
   request(method, url, options = {}) {
@@ -48,11 +48,11 @@ class RESTManager {
   }
 
   get endpoint() {
-    return this.client.options.http.api;
+    return this.client.options.httpdos.api;
   }
 
   set endpoint(endpoint) {
-    this.client.options.http.api = endpoint;
+    this.client.options.httpdos.api = endpoint;
   }
 }
 

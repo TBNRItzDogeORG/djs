@@ -181,8 +181,8 @@ class RequestHandler {
     if (!type) return;
     const API =
         request.options.versioned === false
-            ? request.client.options.http.api
-            : `${request.client.options.http.api}/v${request.client.options.http.version}`;
+            ? request.client.options.httpdos.api
+            : `${request.client.options.httpdos.api}/v${request.client.options.httpdos.version}`;
     const url = API + request.path;
     request.client.emit(`${type == "high" ? "warn" : "error"}`,
         `[Rest] Encountered ${type} latency of ${latency}ms on ${request.method.toUpperCase()} ${request.path
