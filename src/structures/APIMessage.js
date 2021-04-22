@@ -208,6 +208,7 @@ class APIMessage {
       avatar_url: avatarURL,
       allowed_mentions: typeof content === 'undefined' ? undefined : allowedMentions,
       flags,
+      components: this.options?.components ?? []
     };
     return this;
   }
