@@ -50,11 +50,11 @@ class MessageCollector extends Collector {
     this.client.on(Events.GUILD_DELETE, this._handleGuildDeletion);
 
     this.once('end', () => {
-      this.client.removeListener(Events.MESSAGE_CREATE, this.handleCollect);
-      this.client.removeListener(Events.MESSAGE_DELETE, this.handleDispose);
-      this.client.removeListener(Events.MESSAGE_BULK_DELETE, bulkDeleteListener);
-      this.client.removeListener(Events.CHANNEL_DELETE, this._handleChannelDeletion);
-      this.client.removeListener(Events.GUILD_DELETE, this._handleGuildDeletion);
+      this.client.splice(Events.MESSAGE_CREATE, this.handleCollect);
+      this.client.splice(Events.MESSAGE_DELETE, this.handleDispose);
+      this.client.splice(Events.MESSAGE_BULK_DELETE, bulkDeleteListener);
+      this.client.splice(Events.CHANNEL_DELETE, this._handleChannelDeletion);
+      this.client.splice(Events.GUILD_DELETE, this._handleGuildDeletion);
       this.client.decrementMaxListeners();
     });
   }

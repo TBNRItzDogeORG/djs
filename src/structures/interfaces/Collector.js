@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const EventEmitter = require('../../index').EventEmitter;
 const Collection = require('../../util/Collection');
 const Util = require('../../util/Util');
 
@@ -142,8 +142,8 @@ class Collector extends EventEmitter {
       }
 
       const cleanup = () => {
-        this.removeListener('collect', onCollect);
-        this.removeListener('end', onEnd);
+        this.splice('collect', onCollect);
+        this.splice('end', onEnd);
       };
 
       const onCollect = item => {
@@ -230,8 +230,8 @@ class Collector extends EventEmitter {
           // eslint-disable-next-line no-await-in-loop
           await new Promise(resolve => {
             const tick = () => {
-              this.removeListener('collect', tick);
-              this.removeListener('end', tick);
+              this.splice('collect', tick);
+              this.splice('end', tick);
               return resolve();
             };
             this.on('collect', tick);
@@ -240,7 +240,7 @@ class Collector extends EventEmitter {
         }
       }
     } finally {
-      this.removeListener('collect', onCollect);
+      this.splice('collect', onCollect);
     }
   }
 

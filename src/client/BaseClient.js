@@ -1,7 +1,7 @@
 'use strict';
 
 require('setimmediate');
-const EventEmitter = require('events');
+const { EventEmitter } = require('..');
 const RESTManager = require('../rest/RESTManager');
 const RM2 = require('../restdos/RESTManager');
 const { DefaultOptions } = require('../util/Constants');
@@ -144,10 +144,7 @@ class BaseClient extends EventEmitter {
    * @private
    */
   incrementMaxListeners() {
-    const maxListeners = this.getMaxListeners();
-    if (maxListeners !== 0) {
-      this.setMaxListeners(maxListeners + 1);
-    }
+
   }
 
   /**
@@ -155,10 +152,7 @@ class BaseClient extends EventEmitter {
    * @private
    */
   decrementMaxListeners() {
-    const maxListeners = this.getMaxListeners();
-    if (maxListeners !== 0) {
-      this.setMaxListeners(maxListeners - 1);
-    }
+
   }
 
   toJSON(...props) {

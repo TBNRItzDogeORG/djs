@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const EventEmitter = require('../../index').EventEmitter;
 const BroadcastAudioPlayer = require('./player/BroadcastAudioPlayer');
 const PlayInterface = require('./util/PlayInterface');
 const { Events } = require('../../util/Constants');

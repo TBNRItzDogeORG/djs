@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const EventEmitter = require('../../index').EventEmitter;
 const WebSocket = require('../../WebSocket');
 const { browser, Status, Events, ShardEvents, OPCodes, WSEvents } = require('../../util/Constants');
 
@@ -183,11 +183,11 @@ class WebSocketShard extends EventEmitter {
 
     return new Promise((resolve, reject) => {
       const cleanup = () => {
-        this.removeListener(ShardEvents.CLOSE, onClose);
-        this.removeListener(ShardEvents.READY, onReady);
-        this.removeListener(ShardEvents.RESUMED, onResumed);
-        this.removeListener(ShardEvents.INVALID_SESSION, onInvalidOrDestroyed);
-        this.removeListener(ShardEvents.DESTROYED, onInvalidOrDestroyed);
+        this.splice(ShardEvents.CLOSE, onClose);
+        this.splice(ShardEvents.READY, onReady);
+        this.splice(ShardEvents.RESUMED, onResumed);
+        this.splice(ShardEvents.INVALID_SESSION, onInvalidOrDestroyed);
+        this.splice(ShardEvents.DESTROYED, onInvalidOrDestroyed);
       };
 
       const onReady = () => {

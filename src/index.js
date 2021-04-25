@@ -105,4 +105,6 @@ module.exports = {
   Webhook: require('./structures/Webhook'),
 
   WebSocket: require('./WebSocket'),
+
+  EventEmitter: require('./EventEmitter')
 };
