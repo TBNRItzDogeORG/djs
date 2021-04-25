@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../index').EventEmitter;
+const EventEmitter = require('../../EventEmitter');
 const Collection = require('../../util/Collection');
 const Util = require('../../util/Util');
 

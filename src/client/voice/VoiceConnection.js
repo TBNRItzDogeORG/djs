@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../index').EventEmitter;
+const EventEmitter = require('../../EventEmitter')
 const VoiceUDP = require('./networking/VoiceUDPClient');
 const VoiceWebSocket = require('./networking/VoiceWebSocket');
 const AudioPlayer = require('./player/AudioPlayer');

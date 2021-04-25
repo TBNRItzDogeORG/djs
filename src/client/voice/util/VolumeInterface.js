@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../../index').EventEmitter;
+const EventEmitter = require('../../../EventEmitter');
 
 /**
  * An interface class for volume transformation.

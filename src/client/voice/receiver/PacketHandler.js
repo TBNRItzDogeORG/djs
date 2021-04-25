@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../../index').EventEmitter;
+const EventEmitter = require('../../../EventEmitter')
 const Speaking = require('../../../util/Speaking');
 const secretbox = require('../util/Secretbox');
 const { SILENCE_FRAME } = require('../util/Silence');

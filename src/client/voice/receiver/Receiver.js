@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../../index').EventEmitter;
+const EventEmitter = require('../../../EventEmitter')
 const prism = require('prism-media');
 const PacketHandler = require('./PacketHandler');
 const { Error } = require('../../../errors');

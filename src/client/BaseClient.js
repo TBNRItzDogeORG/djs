@@ -1,7 +1,7 @@
 'use strict';
 
 require('setimmediate');
-const { EventEmitter } = require('..');
+const EventEmitter = require('../EventEmitter');
 const RESTManager = require('../rest/RESTManager');
 const RM2 = require('../restdos/RESTManager');
 const { DefaultOptions } = require('../util/Constants');

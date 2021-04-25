@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('../../../index').EventEmitter;
+const EventEmitter = require('../../../EventEmitter')
 const WebSocket = require('../../../WebSocket');
 const { Error } = require('../../../errors');
 const { OPCodes, VoiceOPCodes } = require('../../../util/Constants');
